@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using secondYear.context;
 
@@ -11,9 +12,11 @@ using secondYear.context;
 namespace secondYear.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240801084712_TravelPackage")]
+    partial class TravelPackage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,15 +69,10 @@ namespace secondYear.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("HotelId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("Rating")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HotelId");
 
                     b.ToTable("Reviews");
                 });
@@ -105,21 +103,6 @@ namespace secondYear.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TravelPackages");
-                });
-
-            modelBuilder.Entity("secondYear.Models.Review", b =>
-                {
-                    b.HasOne("secondYear.Models.Hotel", "Hotel")
-                        .WithMany("Reviews")
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Hotel");
-                });
-
-            modelBuilder.Entity("secondYear.Models.Hotel", b =>
-                {
-                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }
