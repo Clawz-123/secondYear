@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update.Internal;
 using secondYear.context;
 using secondYear.Dto;
@@ -22,18 +23,19 @@ namespace secondYear.Controller
         }
 
     [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult<IEnumerable<Hotel>>> Get()
         {
-            var hotel = _context.Hotels.ToList();
+            var hotel = await _context.Hotels.ToListAsync();
             return Ok(hotel);
         }
 
          [HttpPost]
 
-        public IActionResult Create([FromBody]HotelDto hotelDto)
+        public async Task<ActionResult<IEnumerable<Hotel>>> Create([FromBody]HotelDto hotelDto)
         {
+            try{
 
-            var hotel = new Hotel
+                   var hotel = new Hotel
             {
                 Name = hotelDto.Name,
                 Address = hotelDto.Address,
@@ -42,19 +44,28 @@ namespace secondYear.Controller
                 Image = hotelDto.Image
             };
            
-            _context.Hotels.Add(hotel);
-            _context.SaveChanges();
+            await _context.Hotels.AddAsync(hotel);
+            await _context.SaveChangesAsync();
 
              return Ok("Created Successfully");
+
+            }catch(Exception e) {
+                return BadRequest(e);
+            }
+
+
+         
         }
 
       
 
       [HttpGet("{id}")]
 
-      public IActionResult GetById(int id)
+      public async Task <ActionResult<IEnumerable<Hotel>>> GetById(int id)
       {
-        var hotel = _context.Hotels.Find(id);
+        try{
+
+        var hotel = await _context.Hotels.FindAsync(id);
 
         if (hotel == null){
             return NotFound();
@@ -62,13 +73,19 @@ namespace secondYear.Controller
 
         return Ok(hotel);
       }
+      catch{
+        return BadRequest();      
+        }
+        }
 
 
         [HttpDelete("{id}")]
 
-        public IActionResult Delete(int id)
+        public async Task <ActionResult<IEnumerable<Hotel>>> Delete(int id)
         {
-            var findHotel = _context.Hotels.Find(id);
+            try{
+
+            var findHotel = await _context.Hotels.FindAsync(id);
 
 
             if (findHotel == null){
@@ -76,16 +93,21 @@ namespace secondYear.Controller
             } 
 
             _context.Hotels.Remove(findHotel);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok("Removed Sucessfully");
-
+            }
+            catch{
+               return BadRequest();
+            }
         }
 
         [HttpPut("{id}")]
 
-        public IActionResult Update(int id, Hotel updateHotel)
+        public async Task <ActionResult<IEnumerable<Hotel>>> Update(int id, Hotel updateHotel)
         {
-            var findHotel = _context.Hotels.Find(id);
+            try{
+
+            var findHotel =await _context.Hotels.FindAsync(id);
 
             if(findHotel == null){
                 return NotFound();            
@@ -96,20 +118,30 @@ namespace secondYear.Controller
                 findHotel.Description = updateHotel.Description;
                 findHotel.Price = updateHotel.Price;
                 findHotel.Image = updateHotel.Image;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return Ok("Updated Sucessfully");
+            }
+            catch{
+              return  BadRequest();
+            }
         }
 
         [HttpGet("Search")]
-        public IActionResult SearchByName([FromQuery] string name)
+        public async Task <ActionResult<IEnumerable<Hotel>>> SearchByName([FromQuery] string name)
         {
-            var hotels = _context.Hotels.Where(h => h.Name.Contains(name)).ToList();
+            try{
+
+            var hotels = await _context.Hotels.Where(h => h.Name.Contains(name)).ToListAsync();
 
             if(!hotels.Any()){
                 return NotFound();
             }
 
             return Ok(hotels);
+            }
+            catch{
+               return BadRequest();
+            }
 
 
         }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using secondYear.context;
+using secondYear.Dto;
 using secondYear.Models;
 
 namespace secondYear.Controller
@@ -28,19 +30,37 @@ namespace secondYear.Controller
 
         [HttpPost]
 
-        public IActionResult Create([FromBody] TravelPackage travelpackage)
+        public async Task<ActionResult<IEnumerable<TravelPackage>>> Create([FromBody] TravelPackageDto travelpackageDto)
         {
+            try{
+
+
+            var travelpackage = new TravelPackage
+            {
+                Name = travelpackageDto.Name,
+                Address = travelpackageDto.Address,
+                Description = travelpackageDto.Description,
+                Price = travelpackageDto.Price,
+                Image = travelpackageDto.Image
+
+            };
             _context.TravelPackages.Add(travelpackage);
-            _context.SaveChanges();
+           await  _context.SaveChangesAsync();
             return Ok("Created Sucessfully");
+            }
+            catch{
+               return BadRequest();
+            }
 
         }
-
+   
         [HttpDelete("{id}")]
 
-        public IActionResult Delete(int id)
+        public async Task<ActionResult<IEnumerable<TravelPackage>>> Delete(int id)
         {
-            var travel = _context.TravelPackages.Find(id);
+            try{
+
+            var travel =await  _context.TravelPackages.FindAsync(id);
 
             if (travel == null)
             {
@@ -48,16 +68,22 @@ namespace secondYear.Controller
             }
 
             _context.TravelPackages.Remove(travel);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok("Deleted Sucessfully");
+            }
+            catch{
+                return BadRequest();
+            }
 
         }
 
         [HttpPut("{id}")]
 
-        public IActionResult Update(int id, TravelPackage updateTravelPackage)
+        public async Task<ActionResult<IEnumerable<TravelPackage>>> Update(int id, TravelPackage updateTravelPackage)
         {
-            var findtravel = _context.TravelPackages.Find(id);
+            try{
+
+            var findtravel =await _context.TravelPackages.FindAsync(id);
 
             if (findtravel == null)
             {
@@ -69,15 +95,21 @@ namespace secondYear.Controller
             findtravel.Price = updateTravelPackage.Price;
             findtravel.Image = updateTravelPackage.Image;
             findtravel.Description = updateTravelPackage.Description;
-            _context.SaveChanges();
+           await  _context.SaveChangesAsync();
             return Ok("Updated Sucessfully");
         }
+        catch{
+            return BadRequest();
+        }
+            }
 
         [HttpGet("Search")]
 
-        public IActionResult Search([FromQuery] string name)
+        public async Task<ActionResult<IEnumerable<TravelPackage>>> Search([FromQuery] string name)
         {
-            var findtravel = _context.TravelPackages.Where(g => g.Name.Contains(name)).ToList();
+            try{
+
+            var findtravel =await _context.TravelPackages.Where(g => g.Name.Contains(name)).ToListAsync();
 
             if (!findtravel.Any())
             {
@@ -86,6 +118,10 @@ namespace secondYear.Controller
 
             return Ok(findtravel);
         }
+        catch{
+            return BadRequest();
+        }
+            }
 
 
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using secondYear.context;
 
@@ -11,9 +12,11 @@ using secondYear.context;
 namespace secondYear.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240805035328_Boking")]
+    partial class Boking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,16 +104,11 @@ namespace secondYear.Migrations
                     b.Property<int?>("TravelId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
 
                     b.HasIndex("TravelId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
                 });
@@ -171,7 +169,7 @@ namespace secondYear.Migrations
             modelBuilder.Entity("secondYear.Models.Booking", b =>
                 {
                     b.HasOne("secondYear.Models.Hotel", "Hotel")
-                        .WithMany("Bookings")
+                        .WithMany()
                         .HasForeignKey("HotelId");
 
                     b.HasOne("secondYear.Models.User", "User")
@@ -187,37 +185,25 @@ namespace secondYear.Migrations
                 {
                     b.HasOne("secondYear.Models.Hotel", "Hotel")
                         .WithMany("Reviews")
-                        .HasForeignKey("HotelId");
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("secondYear.Models.TravelPackage", "TravelPackage")
                         .WithMany("Reviews")
                         .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("secondYear.Models.User", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Hotel");
 
                     b.Navigation("TravelPackage");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("secondYear.Models.Hotel", b =>
                 {
-                    b.Navigation("Bookings");
-
                     b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("secondYear.Models.TravelPackage", b =>
-                {
-                    b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("secondYear.Models.User", b =>
                 {
                     b.Navigation("Reviews");
                 });

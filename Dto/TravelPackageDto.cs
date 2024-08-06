@@ -1,23 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace secondYear.Models
+namespace secondYear.Dto
 {
-    public class TravelPackage
+    public class TravelPackageDto
     {
-        [Key]
-        
-        public int Id {get; set;}
-
-         public string? Name {get; set;} 
+        public string? Name {get; set;} 
         public string? Description {get; set;} 
         public string? Image {get; set;} 
         public string? Price {get; set;} 
         public string? Address {get; set;} 
-
-        public ICollection<Review> Reviews {get; set;} = new List<Review>();
     }
 }

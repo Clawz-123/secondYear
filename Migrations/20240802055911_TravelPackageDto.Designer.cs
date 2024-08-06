@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using secondYear.context;
 
@@ -11,9 +12,11 @@ using secondYear.context;
 namespace secondYear.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240802055911_TravelPackageDto")]
+    partial class TravelPackageDto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,32 +24,6 @@ namespace secondYear.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("secondYear.Models.Booking", b =>
-                {
-                    b.Property<int?>("BookingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("BookingId"));
-
-                    b.Property<int?>("DateTime")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("HotelId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BookingId");
-
-                    b.HasIndex("HotelId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Bookings");
-                });
 
             modelBuilder.Entity("secondYear.Models.Hotel", b =>
                 {
@@ -101,16 +78,11 @@ namespace secondYear.Migrations
                     b.Property<int?>("TravelId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
 
                     b.HasIndex("TravelId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
                 });
@@ -143,81 +115,29 @@ namespace secondYear.Migrations
                     b.ToTable("TravelPackages");
                 });
 
-            modelBuilder.Entity("secondYear.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("secondYear.Models.Booking", b =>
-                {
-                    b.HasOne("secondYear.Models.Hotel", "Hotel")
-                        .WithMany("Bookings")
-                        .HasForeignKey("HotelId");
-
-                    b.HasOne("secondYear.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Hotel");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("secondYear.Models.Review", b =>
                 {
                     b.HasOne("secondYear.Models.Hotel", "Hotel")
                         .WithMany("Reviews")
-                        .HasForeignKey("HotelId");
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("secondYear.Models.TravelPackage", "TravelPackage")
                         .WithMany("Reviews")
                         .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("secondYear.Models.User", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Hotel");
 
                     b.Navigation("TravelPackage");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("secondYear.Models.Hotel", b =>
                 {
-                    b.Navigation("Bookings");
-
                     b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("secondYear.Models.TravelPackage", b =>
-                {
-                    b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("secondYear.Models.User", b =>
                 {
                     b.Navigation("Reviews");
                 });

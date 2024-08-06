@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using secondYear.context;
 using secondYear.Dto;
@@ -23,17 +24,27 @@ namespace secondYear.Controller
 
         [HttpGet]
 
-        public IActionResult Get()
+        public async Task <ActionResult<IEnumerable<Review>>> Get()
         {
-            var reviews = _context.Reviews.ToList();
+            try{
+            var reviews =await  _context.Reviews
+            .Include(r => r.Hotel)
+            .Include(r => r.User)
+            .ToListAsync();
             return Ok(reviews);
+
+            }
+            catch{
+                return BadRequest();
+            }
 
         }
 
         [HttpPost]
 
-        public IActionResult Create([FromBody] ReviewDto reviewDto)
+        public async Task <ActionResult<IEnumerable<Review>>> Create([FromBody] ReviewDto reviewDto)
         {
+            try{
 
             var review = new Review
             {
@@ -43,25 +54,36 @@ namespace secondYear.Controller
             };
            
            _context.Reviews.Add(review);
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
 
             return Ok("Created Sucessfully");
+            }
+            catch{
+               return  BadRequest();
+            }
+
 
         }
 
         [HttpDelete("{id}")]
 
-        public IActionResult Delete(int id)
+        public async Task <ActionResult<IEnumerable<Review>>> Delete(int id)
         {
-            var findReviews = _context.Reviews.Find(id);
+            try{
+
+            var findReviews =await  _context.Reviews.FindAsync(id);
 
             if(findReviews == null){
                 return NotFound();
             }  
 
             _context.Reviews.Remove(findReviews);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok("Deleted Sucessfully");
+            }
+            catch{
+                return BadRequest();
+            }
 
         }
 

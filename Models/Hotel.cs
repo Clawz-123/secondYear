@@ -19,5 +19,7 @@ namespace secondYear.Models
             public string Address {get; set;} = string.Empty;
 
             public ICollection<Review> Reviews {get; set;} = new List<Review>();
+
+            public ICollection<Booking> Bookings {get; set;} = new List<Booking>();
     }
 }

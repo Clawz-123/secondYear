@@ -20,6 +20,15 @@ namespace secondYear.Models
 
         public Hotel? Hotel {get; set;}
 
+       
+        public int? UserId {get; set;}
+
+        public User? User {get; set;}
+
+        public int? TravelId {get; set;}
+
+        public TravelPackage? TravelPackage {get; set;}
+
         
     }
 }
