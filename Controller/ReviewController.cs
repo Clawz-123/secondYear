@@ -28,7 +28,7 @@ namespace secondYear.Controller
         {
             try{
             var reviews =await  _context.Reviews
-            .Include(r => r.Hotel)
+            // .Include(r => r.Hotel)
             .Include(r => r.User)
             .ToListAsync();
             return Ok(reviews);
@@ -50,7 +50,7 @@ namespace secondYear.Controller
             {
                 Rating = reviewDto.Rating,
                 Comment = reviewDto.Comment,
-                HotelId = reviewDto.HotelId
+                // HotelId = reviewDto.HotelId
             };
            
            _context.Reviews.Add(review);

@@ -56,13 +56,12 @@ namespace secondYear.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("FreeCancellation")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Image")
                         .IsRequired()
@@ -75,6 +74,9 @@ namespace secondYear.Migrations
                     b.Property<string>("Price")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ReserveNow")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -92,23 +94,13 @@ namespace secondYear.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("HotelId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TravelId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HotelId");
-
-                    b.HasIndex("TravelId");
 
                     b.HasIndex("UserId");
 
@@ -123,13 +115,14 @@ namespace secondYear.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("FreeCancellation")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Image")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -137,6 +130,9 @@ namespace secondYear.Migrations
 
                     b.Property<string>("Price")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ReserveNow")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -171,7 +167,7 @@ namespace secondYear.Migrations
             modelBuilder.Entity("secondYear.Models.Booking", b =>
                 {
                     b.HasOne("secondYear.Models.Hotel", "Hotel")
-                        .WithMany("Bookings")
+                        .WithMany()
                         .HasForeignKey("HotelId");
 
                     b.HasOne("secondYear.Models.User", "User")
@@ -185,41 +181,11 @@ namespace secondYear.Migrations
 
             modelBuilder.Entity("secondYear.Models.Review", b =>
                 {
-                    b.HasOne("secondYear.Models.Hotel", "Hotel")
-                        .WithMany("Reviews")
-                        .HasForeignKey("HotelId");
-
-                    b.HasOne("secondYear.Models.TravelPackage", "TravelPackage")
-                        .WithMany("Reviews")
-                        .HasForeignKey("TravelId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("secondYear.Models.User", "User")
-                        .WithMany("Reviews")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Hotel");
-
-                    b.Navigation("TravelPackage");
-
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("secondYear.Models.Hotel", b =>
-                {
-                    b.Navigation("Bookings");
-
-                    b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("secondYear.Models.TravelPackage", b =>
-                {
-                    b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("secondYear.Models.User", b =>
-                {
-                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

@@ -14,12 +14,15 @@ namespace secondYear.Models
 
             public string Name {get; set;} = string.Empty;
             public string Description {get; set;} = string.Empty;
-            public string Image {get; set;} = string.Empty;
+            public List<string> Image {get; set;} = new List<string>();
             public string Price {get; set;} = string.Empty;
-            public string Address {get; set;} = string.Empty;
+            // public string Address {get; set;} = string.Empty;
+
+            public bool FreeCancellation {get; set;} = false;
+            public bool ReserveNow {get; set;} = false;
 
             public ICollection<Review> Reviews {get; set;} = new List<Review>();
 
-            public ICollection<Booking> Bookings {get; set;} = new List<Booking>();
+            // public ICollection<Booking> Bookings {get; set;} = new List<Booking>();
     }
 }

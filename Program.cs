@@ -7,11 +7,24 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-builder.Services.AddControllers()
-.AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+builder.Services.AddControllers();
+//Cross-Origin Resource Sharing (CORS)
+builder.Services.AddCors(Options => {
+    Options.AddPolicy("AllowAllOrigins", 
+    builder => {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
+});
+
+// .AddJsonOptions(options =>
+//     {
+//         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+//     });
+
+// void AddJsonOptions(Action<object> value)
+// {
+//     throw new NotImplementedException();
+// }
 
 // builder.Services.AddSingleton<TokenService>();
 
@@ -34,6 +47,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAllOrigins");
 
 app.Run();
 

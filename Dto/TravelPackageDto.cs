@@ -7,10 +7,11 @@ namespace secondYear.Dto
 {
     public class TravelPackageDto
     {
-        public string? Name {get; set;} 
-        public string? Description {get; set;} 
-        public string? Image {get; set;} 
-        public string? Price {get; set;} 
-        public string? Address {get; set;} 
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public List<string> Image {get; set;} = new List<string>(); 
+        public string? Price { get; set; }
+        public bool FreeCancellation { get; set; } = false;
+        public bool ReserveNow { get; set; } = false;
     }
 }

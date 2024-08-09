@@ -41,8 +41,11 @@ namespace secondYear.Controller
             var user = new User{
                 Name = userDto.Name,
                 Role = userDto.Role,
-                UserName = userDto.UserName,
+                Email = userDto.Email,
                 Password = userDto.Password,
+                Image = userDto.Image,
+                CoverImage = userDto.CoverImage,
+                Biodata = userDto.Biodata
             };
             _context.Users.Add(user);
             _context.SaveChanges();

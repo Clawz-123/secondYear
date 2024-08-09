@@ -31,18 +31,22 @@ namespace secondYear.Controller
 
          [HttpPost]
 
-        public async Task<ActionResult<IEnumerable<Hotel>>> Create([FromBody]HotelDto hotelDto)
+        public async Task<ActionResult<IEnumerable<Hotel>>> Create([FromBody]Hotel hotel)
         {
             try{
 
-                   var hotel = new Hotel
-            {
-                Name = hotelDto.Name,
-                Address = hotelDto.Address,
-                Description = hotelDto.Description,
-                Price = hotelDto.Price,
-                Image = hotelDto.Image
-            };
+            //        var hotel = new Hotel
+            // {
+            //     Name = hotelDto.Name,
+            //     Address = hotelDto.Address,
+            //     Description = hotelDto.Description,
+            //     Price = hotelDto.Price,
+            //     Image = hotelDto.Image
+            // };
+
+            if(hotel == null){
+                return BadRequest();
+            }
            
             await _context.Hotels.AddAsync(hotel);
             await _context.SaveChangesAsync();
@@ -114,10 +118,11 @@ namespace secondYear.Controller
                 }
 
                 findHotel.Name = updateHotel.Name;
-                findHotel.Address = updateHotel.Address;
                 findHotel.Description = updateHotel.Description;
                 findHotel.Price = updateHotel.Price;
                 findHotel.Image = updateHotel.Image;
+                findHotel.FreeCancellation = updateHotel.FreeCancellation;
+                findHotel.ReserveNow = updateHotel.ReserveNow;
                 await _context.SaveChangesAsync();
                 return Ok("Updated Sucessfully");
             }

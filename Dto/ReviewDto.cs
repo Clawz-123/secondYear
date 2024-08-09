@@ -11,7 +11,7 @@ namespace secondYear.Dto
 
         public string? Comment { get; set; }
 
-        public int? HotelId { get; set; }
+        // public int? HotelId { get; set; }
 
     }
 }

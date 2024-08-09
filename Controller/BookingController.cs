@@ -39,7 +39,7 @@ namespace secondYear.Controller
             var booking = new Booking{
                  DateTime =  bookingDto.DateTime,
                 UserId = bookingDto.UserId,
-                HotelId = bookingDto.HotelId,
+                // HotelId = bookingDto.HotelId,
             };
            await  _context.Bookings.AddAsync(booking);
            await _context.SaveChangesAsync();

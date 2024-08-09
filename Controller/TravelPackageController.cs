@@ -38,14 +38,15 @@ namespace secondYear.Controller
             var travelpackage = new TravelPackage
             {
                 Name = travelpackageDto.Name,
-                Address = travelpackageDto.Address,
+                FreeCancellation = travelpackageDto.FreeCancellation,
+                ReserveNow = travelpackageDto.ReserveNow,
                 Description = travelpackageDto.Description,
                 Price = travelpackageDto.Price,
                 Image = travelpackageDto.Image
 
             };
             _context.TravelPackages.Add(travelpackage);
-           await  _context.SaveChangesAsync();
+            await  _context.SaveChangesAsync();
             return Ok("Created Sucessfully");
             }
             catch{
@@ -91,7 +92,8 @@ namespace secondYear.Controller
             }
 
             findtravel.Name = updateTravelPackage.Name;
-            findtravel.Address = updateTravelPackage.Address;
+            findtravel.FreeCancellation = updateTravelPackage.FreeCancellation;
+            findtravel.ReserveNow = updateTravelPackage.ReserveNow;
             findtravel.Price = updateTravelPackage.Price;
             findtravel.Image = updateTravelPackage.Image;
             findtravel.Description = updateTravelPackage.Description;
@@ -109,7 +111,8 @@ namespace secondYear.Controller
         {
             try{
 
-            var findtravel =await _context.TravelPackages.Where(g => g.Name.Contains(name)).ToListAsync();
+            var findtravel =await _context.TravelPackages.Where(g => g.Name.Contains(name))
+                    .ToListAsync();
 
             if (!findtravel.Any())
             {
