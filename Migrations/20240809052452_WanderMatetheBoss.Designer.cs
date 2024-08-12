@@ -12,8 +12,8 @@ using secondYear.context;
 namespace secondYear.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240808061953_travel")]
-    partial class travel
+    [Migration("20240809052452_WanderMatetheBoss")]
+    partial class WanderMatetheBoss
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,6 +97,12 @@ namespace secondYear.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DateTime")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("HotelId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Rating")
                         .HasColumnType("int");
 
@@ -104,6 +110,8 @@ namespace secondYear.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
 
                     b.HasIndex("UserId");
 
@@ -150,6 +158,18 @@ namespace secondYear.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Biodata")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoverImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -157,9 +177,6 @@ namespace secondYear.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -184,11 +201,22 @@ namespace secondYear.Migrations
 
             modelBuilder.Entity("secondYear.Models.Review", b =>
                 {
+                    b.HasOne("secondYear.Models.Hotel", "Hotel")
+                        .WithMany("Reviews")
+                        .HasForeignKey("HotelId");
+
                     b.HasOne("secondYear.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
+                    b.Navigation("Hotel");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("secondYear.Models.Hotel", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

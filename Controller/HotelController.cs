@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update.Internal;
 using secondYear.context;
-using secondYear.Dto;
+using secondYear.Dto.HotelDTOs;
 using secondYear.Models;
 
 namespace secondYear.Controller
@@ -22,101 +22,135 @@ namespace secondYear.Controller
             _context = context;
         }
 
-    [HttpGet]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotel>>> Get()
         {
             var hotel = await _context.Hotels.ToListAsync();
-            return Ok(hotel);
+
+            if (hotel == null)
+            {
+                return NotFound("No hotel was found");
+            }
+
+            var GetHotelDTOs = hotel.Select(h => new GetHotelDTOs
+            {
+                Id = h.Id,
+                Name = h.Name,
+                Price = h.Price,
+                Image = h.Image,
+                Description = h.Description,
+                FreeCancellation = h.FreeCancellation,
+                ReserveNow = h.ReserveNow
+            });
+
+            return Ok(new { message = "The Hotel data is fetched sucessfully", GetHotelDTOs });
         }
 
-         [HttpPost]
+        [HttpPost]
 
-        public async Task<ActionResult<IEnumerable<Hotel>>> Create([FromBody]Hotel hotel)
+        public async Task<IActionResult> Create([FromBody] HotelDto hotelDto)
         {
-            try{
+            try
+            {
 
-            //        var hotel = new Hotel
-            // {
-            //     Name = hotelDto.Name,
-            //     Address = hotelDto.Address,
-            //     Description = hotelDto.Description,
-            //     Price = hotelDto.Price,
-            //     Image = hotelDto.Image
-            // };
+                var hotel = new Hotel
+                {
+                    Name = hotelDto.Name,
+                    FreeCancellation = hotelDto.FreeCancellation,
+                    ReserveNow = hotelDto.ReserveNow,
+                    Description = hotelDto.Description,
+                    Price = hotelDto.Price,
+                    Image = hotelDto.Image
+                };
 
-            if(hotel == null){
+                if (hotel == null)
+                {
+                    return BadRequest();
+                }
+
+                await _context.Hotels.AddAsync(hotel);
+                await _context.SaveChangesAsync();
+
+                //  return Ok("Created Successfully");
+                return Ok(new { message = "The Hotel created", hotel });
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetById(int id)
+        {
+            try
+            {
+
+               var hotelById = await _context.Hotels.FindAsync(id);
+                if (hotelById == null)
+                {
+                    return NotFound("The given Hotel is Not Found");
+                }
+                var hotel = new HotelDto
+                {
+                    Name = hotelById.Name,
+                    FreeCancellation = hotelById.FreeCancellation,
+                    ReserveNow = hotelById.ReserveNow,
+                    Description = hotelById.Description,
+                    Price = hotelById.Price,
+                    Image = hotelById.Image
+                };
+
+
+
+                return Ok(new {message = "The Hotel of the given id is :", hotel});
+            }
+            catch
+            {
                 return BadRequest();
             }
-           
-            await _context.Hotels.AddAsync(hotel);
-            await _context.SaveChangesAsync();
-
-             return Ok("Created Successfully");
-
-            }catch(Exception e) {
-                return BadRequest(e);
-            }
-
-
-         
-        }
-
-      
-
-      [HttpGet("{id}")]
-
-      public async Task <ActionResult<IEnumerable<Hotel>>> GetById(int id)
-      {
-        try{
-
-        var hotel = await _context.Hotels.FindAsync(id);
-
-        if (hotel == null){
-            return NotFound();
-        }
-
-        return Ok(hotel);
-      }
-      catch{
-        return BadRequest();      
-        }
         }
 
 
         [HttpDelete("{id}")]
 
-        public async Task <ActionResult<IEnumerable<Hotel>>> Delete(int id)
+        public async Task<ActionResult<IEnumerable<Hotel>>> Delete(int id)
         {
-            try{
+            try
+            {
 
-            var findHotel = await _context.Hotels.FindAsync(id);
+                var findHotel = await _context.Hotels.FindAsync(id);
+                if (findHotel == null)
+                {
+                    return NotFound();
+                }
 
-
-            if (findHotel == null){
-                return NotFound();
-            } 
-
-            _context.Hotels.Remove(findHotel);
-            await _context.SaveChangesAsync();
-            return Ok("Removed Sucessfully");
+                _context.Hotels.Remove(findHotel);
+                await _context.SaveChangesAsync();
+                return Ok(new{ message = "The Hotel Has be Pernamently deleted"});
             }
-            catch{
-               return BadRequest();
+            catch
+            {
+                return BadRequest();
             }
         }
 
         [HttpPut("{id}")]
 
-        public async Task <ActionResult<IEnumerable<Hotel>>> Update(int id, Hotel updateHotel)
+        public async Task<ActionResult<IEnumerable<Hotel>>> Update(int id, HotelDto updateHotel)
         {
-            try{
+            try
+            {
 
-            var findHotel =await _context.Hotels.FindAsync(id);
+                var findHotel = await _context.Hotels.FindAsync(id);
 
-            if(findHotel == null){
-                return NotFound();            
+                if (findHotel == null)
+                {
+                    return NotFound();
                 }
-
                 findHotel.Name = updateHotel.Name;
                 findHotel.Description = updateHotel.Description;
                 findHotel.Price = updateHotel.Price;
@@ -126,30 +160,35 @@ namespace secondYear.Controller
                 await _context.SaveChangesAsync();
                 return Ok("Updated Sucessfully");
             }
-            catch{
-              return  BadRequest();
+            catch
+            {
+                return BadRequest();
             }
         }
 
         [HttpGet("Search")]
-        public async Task <ActionResult<IEnumerable<Hotel>>> SearchByName([FromQuery] string name)
+        public async Task<ActionResult<IEnumerable<Hotel>>> SearchByName([FromQuery] string name)
         {
-            try{
+            try
+            {
 
-            var hotels = await _context.Hotels.Where(h => h.Name.Contains(name)).ToListAsync();
+                var hotels = await _context.Hotels.Where(h => h.Name.Contains(name)).ToListAsync();
+                
 
-            if(!hotels.Any()){
-                return NotFound();
+                if (!hotels.Any())
+                {
+                    return NotFound();
+                }
+
+                return Ok(hotels);
             }
-
-            return Ok(hotels);
-            }
-            catch{
-               return BadRequest();
+            catch
+            {
+                return BadRequest();
             }
 
 
         }
-        
+
     }
 }

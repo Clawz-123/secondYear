@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using secondYear.Dto;
 
 
 namespace secondYear.Models
@@ -23,6 +24,8 @@ namespace secondYear.Models
 
             public ICollection<Review> Reviews {get; set;} = new List<Review>();
 
-            // public ICollection<Booking> Bookings {get; set;} = new List<Booking>();
+       
+
+        // public ICollection<Booking> Bookings {get; set;} = new List<Booking>();
     }
 }

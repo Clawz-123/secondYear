@@ -22,9 +22,9 @@ namespace secondYear.Models
 
         public int? DateTime { get; set; }
        
-        public int? UserId {get; set;}
+        // public int? UserId {get; set;}
 
-        public User? User {get; set;}
+        // public User? User {get; set;}
 
         // public int? TravelId {get; set;}
 

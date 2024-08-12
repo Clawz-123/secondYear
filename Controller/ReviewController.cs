@@ -27,10 +27,15 @@ namespace secondYear.Controller
         public async Task <ActionResult<IEnumerable<Review>>> Get()
         {
             try{
-            var reviews =await  _context.Reviews
-            // .Include(r => r.Hotel)
-            .Include(r => r.User)
-            .ToListAsync();
+            var reviews =await  _context.Reviews.ToListAsync();
+
+            var ReviewDto = reviews.Select(h => new ReviewDto{
+                Rating = h.Rating,
+                Comment = h.Comment,
+                HotelId = h.HotelId,
+                // UserId = h.UserId,
+                DateTime = h.DateTime
+            });
             return Ok(reviews);
 
             }
@@ -50,7 +55,9 @@ namespace secondYear.Controller
             {
                 Rating = reviewDto.Rating,
                 Comment = reviewDto.Comment,
-                // HotelId = reviewDto.HotelId
+                HotelId = reviewDto.HotelId,
+                // UserId = reviewDto.UserId,
+                DateTime = reviewDto.DateTime
             };
            
            _context.Reviews.Add(review);
