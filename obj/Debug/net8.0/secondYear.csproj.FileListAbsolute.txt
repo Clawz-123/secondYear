@@ -136,3 +136,5 @@ D:\CHARP\first\secondYear\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtim
 D:\CHARP\first\secondYear\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\CHARP\first\secondYear\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 D:\CHARP\first\secondYear\obj\Debug\net8.0\secondYear.sourcelink.json
+D:\CHARP\first\secondYear\bin\Debug\net8.0\BCrypt.Net-Next.dll
+D:\CHARP\first\secondYear\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

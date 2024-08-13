@@ -14,4 +14,4 @@ namespace secondYear.Dto.HotelDTOs
             public bool FreeCancellation {get; set;} = false;
             public bool ReserveNow {get; set;} = false;
     }
-}
+}   

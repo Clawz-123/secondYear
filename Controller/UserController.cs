@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using secondYear.context;
 using secondYear.Dto;
+using secondYear.Dto.HotelDTOs;
+using secondYear.Dto.UserDTOs;
 using secondYear.Models;
 
 namespace secondYear.Controller
@@ -25,32 +27,63 @@ namespace secondYear.Controller
 
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
-            try{
+            try
+            {
 
-            var users = await _context.Users.ToListAsync() ;
-            return Ok(users);
+                var users = await _context.Users.ToListAsync();
+
+                if (users == null)
+                {
+                    return BadRequest("The user is not found");
+                }
+
+                var GetUserDTOs = users.Select(u => new GetUserDTOs
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    Password = u.Password,
+
+                });
+
+            return Ok(new { message = "The User data is fetched sucessfully", GetUserDTOs });
             }
-            catch{
+            catch
+            {
                 return BadRequest();
             }
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]  UserDto userDto)
+        public async Task<ActionResult> Create([FromBody] PostUserDTOs CreateUserDto)
         {
-            var user = new User{
-                Name = userDto.Name,
-                Role = userDto.Role,
-                Email = userDto.Email,
-                Password = userDto.Password,
-                Image = userDto.Image,
-                CoverImage = userDto.CoverImage,
-                Biodata = userDto.Biodata
+
+            var EmailExists =  await _context.Users.SingleOrDefaultAsync(u => u.Email == CreateUserDto.Email);
+            if ( EmailExists != null){
+                return BadRequest("Email Already Exists");
+            }
+
+            var UserNameExists =  await _context.Users.SingleOrDefaultAsync(u => u.UserName == CreateUserDto.UserName);
+            if ( UserNameExists != null){
+                return BadRequest("UserName Already Exists");
+            }
+
+            if(CreateUserDto.Password != CreateUserDto.ConfirmPassword){
+                return BadRequest("The Password Does Not Match");
+            }
+
+            var HashPassword = BCrypt.Net.BCrypt.HashPassword(CreateUserDto.Password);
+
+
+            var user = new User
+            {
+                UserName = CreateUserDto.UserName,
+                Email = CreateUserDto.Email,
+                Password = HashPassword,
             };
             _context.Users.Add(user);
             _context.SaveChanges();
             return Ok("created sucessfully");
-
-        }
     }
+}
 }
