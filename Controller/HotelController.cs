@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update.Internal;
@@ -13,6 +14,7 @@ namespace secondYear.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles ="Admin")]
     public class HotelController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

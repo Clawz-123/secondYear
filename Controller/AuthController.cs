@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using secondYear.context;
 using secondYear.Dto.UserDTOs;
+using secondYear.service;
 
 namespace secondYear.Controller
 {
@@ -14,10 +15,12 @@ namespace secondYear.Controller
     public class AuthController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+           private readonly TokenServices _tokenService;
 
-        public AuthController(ApplicationDbContext context)
+        public AuthController(ApplicationDbContext context, TokenServices tokenServices)
         {
             _context = context;
+            _tokenService = tokenServices;
         }
 
         [HttpPost("SignIn")]
@@ -37,8 +40,9 @@ namespace secondYear.Controller
                 {
                     return BadRequest("Password is incorrect.");
                 }
+                var token = _tokenService.GenerateToken(user);
 
-                return Ok("User signed in successfully!");
+                return Ok(new {message = "Login Sucessfull!", Token = token});
             }
             catch (Exception ex)
             {

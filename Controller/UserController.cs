@@ -43,6 +43,7 @@ namespace secondYear.Controller
                     UserName = u.UserName,
                     Email = u.Email,
                     Password = u.Password,
+                    Role = u.Role
 
                 });
 
@@ -80,6 +81,7 @@ namespace secondYear.Controller
                 UserName = CreateUserDto.UserName,
                 Email = CreateUserDto.Email,
                 Password = HashPassword,
+                Role = CreateUserDto.Role
             };
             _context.Users.Add(user);
             _context.SaveChanges();
