@@ -19,8 +19,16 @@ namespace secondYear.Models
 
         public string? ConfirmPassword { get; set; }
 
+        public string? ProfileImage {get; set;}
+        public string? CoverImage {get; set;}
+        public string? Bio {get; set;}
 
-        // public ICollection<Booking> Bookings {get; set;} =new List<Booking>();
+
+
+
+        public ICollection<Booking> Bookings {get; set;} =new List<Booking>();
         public ICollection<Review> Reviews {get; set;} =new List<Review>();
+
+
     }
 }

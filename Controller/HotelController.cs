@@ -25,6 +25,7 @@ namespace secondYear.Controller
         }
 
         [HttpGet]
+        [Authorize(Roles ="User")]
         public async Task<ActionResult<IEnumerable<Hotel>>> Get()
         {
             var hotel = await _context.Hotels.ToListAsync();
@@ -49,7 +50,7 @@ namespace secondYear.Controller
         }
 
         [HttpPost]
-
+        
         public async Task<IActionResult> Create([FromBody] HotelDto hotelDto)
         {
             try

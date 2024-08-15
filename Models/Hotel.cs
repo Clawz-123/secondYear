@@ -26,6 +26,6 @@ namespace secondYear.Models
 
        
 
-        // public ICollection<Booking> Bookings {get; set;} = new List<Booking>();
+        public ICollection<Booking> Bookings {get; set;} = new List<Booking>();
     }
 }

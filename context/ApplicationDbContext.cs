@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using secondYear.Dto.UserDTOs;
 using secondYear.Models;
+using secondYear.service;
 
 namespace secondYear.context
 {
@@ -23,6 +25,9 @@ namespace secondYear.context
         public DbSet<Booking> Bookings { get; set; }
 
         public DbSet<TravelPackage> TravelPackages { get; set; }
+        public DbSet<PasswordReset> PasswordResets {get; set;}
+        // public DbSet<EmailServices> EmailServices {get; set;}
+
 
 
 
@@ -30,30 +35,30 @@ namespace secondYear.context
         {
             base.OnModelCreating(modelBuilder);
 
-        //     modelBuilder.Entity<Review>()
-        //    .HasOne(r => r.User)
-        //    .WithMany(u => u.Reviews)
-        //    .HasForeignKey(r => r.UserId);
+            modelBuilder.Entity<Review>()
+           .HasOne(r => r.User)
+           .WithMany(u => u.Reviews)
+           .HasForeignKey(r => r.UserId);
 
 
-        //     modelBuilder.Entity<Review>()
-        //     .HasOne(r => r.Hotel)
-        //     .WithMany(h => h.Reviews)
-        //     .HasForeignKey(r => r.HotelId);
+            modelBuilder.Entity<Review>()
+            .HasOne(r => r.Hotel)
+            .WithMany(h => h.Reviews)
+            .HasForeignKey(r => r.HotelId);
 
-        //      modelBuilder.Entity<Booking>()
-        //     .HasOne(b => b.User)
-        //     .WithMany(u => u.Bookings)
-        //     .HasForeignKey(b => b.UserId);
+             modelBuilder.Entity<Booking>()
+            .HasOne(b => b.User)
+            .WithMany(u => u.Bookings)
+            .HasForeignKey(b => b.UserId);
 
-        //     modelBuilder.Entity<Booking>()
-        //     .HasOne(b => b.Hotel)
-        //     .WithMany(h => h.Bookings)
-        //     .HasForeignKey(b => b.HotelId);
+            modelBuilder.Entity<Booking>()
+            .HasOne(b => b.Hotel)
+            .WithMany(h => h.Bookings)
+            .HasForeignKey(b => b.HotelId);
 
 
 
-            // modelBuilder.Entity<Hotel>().HasQueryFilter(h => !h.IsDeleted)      
+            // modelBuilder.Entity<Hotel>().HasQueryFilter(h => !h.IsDeleted)    ;  
 
 
             // modelBuilder.Entity<TravelPackage>()

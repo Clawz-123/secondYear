@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using secondYear.context;
@@ -40,14 +41,31 @@ namespace secondYear.Controller
                 {
                     return BadRequest("Password is incorrect.");
                 }
+                  // Generate JWT token
                 var token = _tokenService.GenerateToken(user);
 
-                return Ok(new {message = "Login Sucessfull!", Token = token});
+                // Store token and user data in the session
+                    HttpContext.Session.SetString("AuthToken", token);
+                    HttpContext.Session.SetString("Id", user.Id.ToString());
+                    HttpContext.Session.SetString("UserName", user.UserName ?? string.Empty);
+                    HttpContext.Session.SetString("UserRole", user.Role ?? string.Empty);
+
+                return Ok(new { Message = "User signed in successfully!", Token = token });
+
+                // return Ok("User signed in successfully!");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
+
+    }
+
+    [Authorize]
+    [HttpGet("verify-token")]
+    public IActionResult VerifyToken(){
+        return Ok("User Authorized");
+
     }
 }
 }

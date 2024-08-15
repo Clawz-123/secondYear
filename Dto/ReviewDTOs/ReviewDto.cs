@@ -13,7 +13,7 @@ namespace secondYear.Dto
 
         public int? HotelId { get; set; }
         public int? DateTime { get; set; }
-        // public int? UserId {get; set;}
+        public int? UserId {get; set;}
 
 
     }

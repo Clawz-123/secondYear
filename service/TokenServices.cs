@@ -43,5 +43,10 @@ namespace secondYear.service
             return jwtToken;
 
         }
+
+        internal string GenerateToken(User user, bool isPasswordValid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

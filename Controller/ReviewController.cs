@@ -56,7 +56,7 @@ namespace secondYear.Controller
                 Rating = reviewDto.Rating,
                 Comment = reviewDto.Comment,
                 HotelId = reviewDto.HotelId,
-                // UserId = reviewDto.UserId,
+                UserId = reviewDto.UserId,
                 DateTime = reviewDto.DateTime
             };
            
