@@ -119,7 +119,7 @@ namespace secondYear.Controller
             var resetToken = Guid.NewGuid().ToString();   // Generate a secure token
 
             var emailBody = $"This is your Reset Token: {resetToken}";
-            await _emailServices.SendEmailAsync(user.Email, "Password Reset", emailBody);
+            await _emailServices.SendEmailAsync(user.Email ??string.Empty, "Password Reset", emailBody );
 
             // Construct reset URL
             // var resetLink = Url.Action("ResetPassword",
@@ -143,6 +143,37 @@ namespace secondYear.Controller
             // await _emailService.SendEmailAsync(user.Username, "Password Reset", emailBody);
 
             return Ok("If an account with that email exists, a password reset link has been sent.");
+        }
+
+        [HttpPost("Update Password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePassword model)
+        {
+            var verifiedToken = _context.PasswordResets.FirstOrDefault(u => u.Token == model.Token);
+
+            if (verifiedToken == null)
+            {
+                return BadRequest("Invalid or expired token.");
+            }
+
+             // Find the user associated with the reset token
+            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            // Hash the new password
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Update_Password);
+
+            // Update the user's password
+            user.Password = hashedPassword;
+            _context.Users.Update(user);
+
+             // Save changes to the database
+            await _context.SaveChangesAsync();
+
+             return Ok("Updated Sucessfully");
+
         }
 
 

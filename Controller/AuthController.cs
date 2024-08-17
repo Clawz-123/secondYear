@@ -44,13 +44,14 @@ namespace secondYear.Controller
                   // Generate JWT token
                 var token = _tokenService.GenerateToken(user);
 
-                // Store token and user data in the session
-                    HttpContext.Session.SetString("AuthToken", token);
-                    HttpContext.Session.SetString("Id", user.Id.ToString());
-                    HttpContext.Session.SetString("UserName", user.UserName ?? string.Empty);
-                    HttpContext.Session.SetString("UserRole", user.Role ?? string.Empty);
+                var response = new {
+                    Token = token,
+                    Id = user.Id,
+                    Role =  user.Role,
+                    ExpiresIn = DateTime.Now.AddMinutes(30)
+                };
 
-                return Ok(new { Message = "User signed in successfully!", Token = token });
+                return Ok(new { Message = "User signed in successfully!", response = response });
 
                 // return Ok("User signed in successfully!");
             }
